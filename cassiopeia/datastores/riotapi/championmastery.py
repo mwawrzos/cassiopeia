@@ -131,7 +131,7 @@ class ChampionMasteryAPI(RiotAPIService):
         return generator()
 
     _validate_get_champion_mastery_list_query = (
-        Query.has("platform").as_(Platform).also.has("summoner.id").as_(str)
+        Query.has("platform").as_(Platform).also.has("puuid").as_(str)
     )
 
     @get.register(ChampionMasteryListDto)
@@ -162,7 +162,7 @@ class ChampionMasteryAPI(RiotAPIService):
         return ChampionMasteryListDto(
             {
                 "masteries": data,
-                "summonerId": query["summoner.id"],
+                "summonerId": query["puuid"],
                 "region": query["platform"].region.value,
             }
         )

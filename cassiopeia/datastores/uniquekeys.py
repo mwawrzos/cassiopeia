@@ -1708,7 +1708,7 @@ def for_many_champion_mastery_query(
 validate_champion_masteries_query = (
     Query.has("platform")
     .as_(Platform)
-    .also.has("summoner.id")
+    .also.has("puuid")
     .as_(str)
     .or_("summoner.accountId")
     .as_(int)

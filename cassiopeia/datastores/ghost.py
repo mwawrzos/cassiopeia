@@ -251,7 +251,7 @@ class UnloadedGhostStore(DataSource):
     )
 
     _validate_get_champion_masteries_query = (
-        Query.has("platform").as_(Platform).also.has("summoner.id").as_(str)
+        Query.has("platform").as_(Platform).also.has("puuid").as_(str)
     )
 
     _validate_get_paginated_queues_query = Query.has("platform").as_(Platform)
@@ -831,7 +831,7 @@ class UnloadedGhostStore(DataSource):
             for unfound_id in all_champion_ids:
                 dto = {
                     "championId": unfound_id,
-                    "playerId": query["summoner.id"],
+                    "playerId": query["puuid"],
                     "championLevel": 0,
                     "chestGranted": False,
                     "championPoints": 0,
@@ -848,7 +848,7 @@ class UnloadedGhostStore(DataSource):
 
         kwargs = {
             "region": query["region"],
-            "summoner": Summoner(id=query["summoner.id"], region=query["region"]),
+            "summoner": Summoner(id=query["puuid"], region=query["region"]),
         }
         return ChampionMasteries.from_generator(
             generator=champion_masteries_generator(query), **kwargs

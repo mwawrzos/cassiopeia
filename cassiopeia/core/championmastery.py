@@ -62,18 +62,15 @@ class ChampionMasteries(CassiopeiaLazyList):
     ) -> dict:
         query = {"region": region}
         if isinstance(summoner, Summoner):
-            query["summoner.id"] = summoner.id
             query["puuid"] = summoner.puuid
         elif isinstance(summoner, str):
             if len(summoner) < 35:
                 # It's a summoner name
                 summoner = Summoner(name=summoner, region=region)
-                query["summoner.id"] = summoner.id
                 query["puuid"] = summoner.puuid
             else:
                 # It's probably a summoner id, still need puuid
                 summoner = Summoner(id=summoner, region=region)
-                query["summoner.id"] = summoner.id
                 query["puuid"] = summoner.puuid
         return query
 
