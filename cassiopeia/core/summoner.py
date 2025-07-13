@@ -93,20 +93,10 @@ class Summoner(CassiopeiaGhost):
     def __eq__(self, other: "Summoner"):
         if not isinstance(other, Summoner) or self.region != other.region:
             return False
-        s = {}
-        o = {}
-        if hasattr(self._data[SummonerData], "id"):
-            s["id"] = self.id
-        if hasattr(other._data[SummonerData], "id"):
-            o["id"] = other.id
-        if hasattr(self._data[SummonerData], "accountId"):
-            s["accountId"] = self.account_id
-        if hasattr(other._data[SummonerData], "accountId"):
-            o["accountId"] = other.account_id
-        if any(s.get(key, "s") == o.get(key, "o") for key in s):
-            return True
-        else:
-            return self.id == other.id
+        try:
+            return self.puuid == other.puuid
+        except AttributeError:
+            return False
 
     def __str__(self):
         id_ = "?"
