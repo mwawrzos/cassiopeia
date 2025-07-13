@@ -549,16 +549,27 @@ class MatchHistory(CassiopeiaLazyList):
         kwargs.setdefault("end_time", self.end_time)
         kwargs.setdefault("queue", self.queue)
         kwargs.setdefault("type", self.match_type)
+        kwargs.setdefault("continent", self.continent)
+        kwargs.setdefault("puuid", self.puuid)
         return MatchHistory(**kwargs)
 
+    @property
     def continent(self) -> Continent:
         return Continent(self._data[MatchListData].continent)
 
-    def queue(self) -> Queue:
-        return Queue(self._data[MatchListData].queue)
+    @property
+    def queue(self) -> Optional[Queue]:
+        q = self._data[MatchListData].queue
+        return Queue(q) if q else None
 
-    def match_type(self) -> MatchType:
-        return MatchType(self._data[MatchData].type)
+    @property
+    def match_type(self) -> Optional[MatchType]:
+        t = self._data[MatchListData].type
+        return MatchType(t) if t else None
+
+    @property
+    def puuid(self):
+        return self._data[MatchListData].puuid
 
     @property
     def start(self) -> Union[int, None]:

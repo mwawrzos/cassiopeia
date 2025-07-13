@@ -1,9 +1,10 @@
-from cassiopeia import Queue, Summoner, SummonersRiftArea
+from cassiopeia import Queue, Account, SummonersRiftArea
 
 
 def test_summonersrift_map():
-    summoner = Summoner(name="Kalturi", region="NA")
-    match = summoner.match_history(queues=[Queue.ranked_solo_fives])[0]
+    a = Account(name="Kalturi", tagline="NA1", region="NA")
+    summoner = a.summoner
+    match = summoner.match_history(queue=Queue.ranked_solo_fives)[0]
     for frame in match.timeline.frames:
         for event in frame.events:
             if event.type == "CHAMPION_KILL":
@@ -11,7 +12,8 @@ def test_summonersrift_map():
 
 
 def test_from_match():
-    summoner = Summoner(name="Kalturi", region="NA")
+    a = Account(name="Kalturi", tagline="NA1", region="NA")
+    summoner = a.summoner
     match_history = summoner.match_history
 
     match = match_history[0]

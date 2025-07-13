@@ -665,6 +665,7 @@ class UnloadedGhostStore(DataSource):
             end_time=end_time,
             queue=queue,
             type=type,
+            continent=continent,
         )
         return generator
 
