@@ -169,10 +169,6 @@ class Summoner(CassiopeiaGhost):
     def revision_date(self) -> datetime.datetime:
         return arrow.get(self._data[SummonerData].revisionDate / 1000)
 
-    @property
-    def match_history_uri(self) -> str:
-        return self.match_history[0].participants[self].match_history_uri
-
     # Special core methods
 
     @property
