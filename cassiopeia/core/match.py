@@ -516,12 +516,12 @@ class MatchHistory(CassiopeiaLazyList):
 
         if start_time is not None:
             if isinstance(start_time, arrow.Arrow):
-                start_time = start_time.int_timestamp
+                start_time = int(start_time.float_timestamp)
             query["startTime"] = start_time
 
         if end_time is not None:
             if isinstance(end_time, arrow.Arrow):
-                end_time = end_time.int_timestamp
+                end_time = int(end_time.float_timestamp)
             query["endTime"] = end_time
 
         if queue is not None:
