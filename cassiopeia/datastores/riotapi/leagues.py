@@ -95,7 +95,7 @@ class LeaguesAPI(RiotAPIService):
         )
 
     _validate_get_league_summoner_entries_query = (
-        Query.has("summoner.id").as_(str).also.has("platform").as_(Platform)
+        Query.has("puuid").as_(str).also.has("platform").as_(Platform)
     )
 
     @get.register(LeagueSummonerEntriesDto)
@@ -105,8 +105,8 @@ class LeaguesAPI(RiotAPIService):
     def get_league_summoner_entries_list(
         self, query: MutableMapping[str, Any], context: PipelineContext = None
     ) -> LeagueSummonerEntriesDto:
-        url = "https://{platform}.api.riotgames.com/lol/league/v4/entries/by-summoner/{id}".format(
-            platform=query["platform"].value.lower(), id=query["summoner.id"]
+        url = "https://{platform}.api.riotgames.com/lol/league/v4/entries/by-puuid/{id}".format(
+            platform=query["platform"].value.lower(), id=query["puuid"]
         )
         try:
             app_limiter, method_limiter = self._get_rate_limiter(
@@ -121,7 +121,7 @@ class LeaguesAPI(RiotAPIService):
         for entry in data:
             entry["region"] = region
         return LeagueSummonerEntriesDto(
-            entries=data, region=region, summonerId=query["summoner.id"]
+            entries=data, region=region, summonerId=query["puuid"]
         )
 
     # Leagues

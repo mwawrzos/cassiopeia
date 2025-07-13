@@ -268,7 +268,7 @@ class LeagueEntry(CassiopeiaGhost):
     @lazy_property
     def summoner(self) -> Summoner:
         return Summoner(
-            id=self._data[LeagueEntryData].summonerId,
+            puuid=self._data[LeagueEntryData].puuid,
             region=self.region,
         )
 
@@ -372,10 +372,10 @@ class LeagueSummonerEntries(CassiopeiaLazyList):
     def __get_query_from_kwargs__(cls, *, summoner: Union[Summoner, str]) -> dict:
         query = {"region": summoner.region}
         if isinstance(summoner, Summoner):
-            query["summoner.id"] = summoner.id
+            query["puuid"] = summoner.puuid
         elif isinstance(summoner, str):
-            query["summoner.id"] = summoner
-        assert "summoner.id" in query
+            query["puuid"] = summoner
+        assert "puuid" in query
         return query
 
     @lazy_property

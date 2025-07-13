@@ -268,7 +268,7 @@ class UnloadedGhostStore(DataSource):
     )
 
     _validate_get_league_summoner_entries_query = (
-        Query.has("summoner.id").as_(str).also.has("platform").as_(Platform)
+        Query.has("puuid").as_(str).also.has("platform").as_(Platform)
     )
 
     _validate_get_league_query = (
@@ -589,7 +589,7 @@ class UnloadedGhostStore(DataSource):
                 entry = LeagueEntry.from_data(entry)
                 yield entry
 
-        kwargs = {"summoner": Summoner(id=query["summoner.id"], region=query["region"])}
+        kwargs = {"summoner": Summoner(id=query["puuid"], region=query["region"])}
         return LeagueSummonerEntries.from_generator(
             generator=league_summoner_entries_generator(query), **kwargs
         )

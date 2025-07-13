@@ -1765,7 +1765,7 @@ def for_champion_masteries_query(query: Query) -> List[Tuple]:
 # League Entries
 
 validate_league_entries_query = (
-    Query.has("platform").as_(Platform).also.has("summoner.id").as_(str)
+    Query.has("platform").as_(Platform).also.has("puuid").as_(str)
 )
 
 
@@ -1781,7 +1781,7 @@ def for_league_summoner_entries(
 
 
 def for_league_summoner_entries_query(query: Query) -> List[Tuple[str, str]]:
-    return [(query["platform"].value, query["summoner.id"])]
+    return [(query["platform"].value, query["puuid"])]
 
 
 def for_many_league_summoner_entries_query(
