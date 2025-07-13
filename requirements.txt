@@ -3,5 +3,6 @@ pytest
 merakicommons>=1.0.7
 datapipelines>=1.0.7
 Pillow
-arrow
+arrow<0.15.0
 requests
+beautifulsoup4
