@@ -11,7 +11,7 @@ def test_known_patches():
 
 def test_unknown_patch_raises():
     with pytest.raises(ValueError):
-        Patch.from_str("unknown patch")
+        Patch.from_str("unknown patch", region="NA")
 
 
 def test_patch_relational_operators():
