@@ -10,11 +10,12 @@ class TestItems(unittest.TestCase):
         cassiopeia.set_riot_api_key(os.environ.get("RIOT_API_KEY"))
 
     def test_items_from_different_versions(self):
-        versions = [cassiopeia.Versions()[0], "6.5.1"]
+        NA = cassiopeia.Region.north_america
+        versions = [cassiopeia.Versions(region=NA)[0], "6.5.1"]
 
         for version in versions:
             with self.subTest(version=version):
-                items = cassiopeia.Items(version=version)
+                items = cassiopeia.Items(version=version, region=NA)
                 self.assertIsNotNone(items.region)
                 self.assertIsNotNone(items.version)
 
