@@ -15,6 +15,10 @@ def test_masteries_correct_type():
     champ_masteries = cassiopeia.get_champion_masteries(
         summoner=summoner, region="NA"
     )
+    # test string input
+    champ_masteries = cassiopeia.get_champion_masteries(
+        summoner=summoner.puuid, region="NA"
+    )
 
     assert isinstance(champ_masteries, SearchableList)
     assert all(isinstance(cm, cassiopeia.ChampionMastery) for cm in champ_masteries)

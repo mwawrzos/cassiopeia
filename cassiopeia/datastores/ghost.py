@@ -589,7 +589,7 @@ class UnloadedGhostStore(DataSource):
                 entry = LeagueEntry.from_data(entry)
                 yield entry
 
-        kwargs = {"summoner": Summoner(id=query["puuid"], region=query["region"])}
+        kwargs = {"summoner": Summoner(puuid=query["puuid"], region=query["region"])}
         return LeagueSummonerEntries.from_generator(
             generator=league_summoner_entries_generator(query), **kwargs
         )
@@ -849,7 +849,7 @@ class UnloadedGhostStore(DataSource):
 
         kwargs = {
             "region": query["region"],
-            "summoner": Summoner(id=query["puuid"], region=query["region"]),
+            "summoner": Summoner(puuid=query["puuid"], region=query["region"]),
         }
         return ChampionMasteries.from_generator(
             generator=champion_masteries_generator(query), **kwargs

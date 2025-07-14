@@ -1802,10 +1802,6 @@ class Participant(CassiopeiaObject):
         if self.__match._data[MatchData].privateGame:
             return None
         kwargs = {}
-        try:
-            kwargs["id"] = self._data[ParticipantData].summonerId
-        except AttributeError:
-            pass
         kwargs["puuid"] = self._data[ParticipantData].puuid
         kwargs["region"] = Platform(self._data[ParticipantData].platformId).region
         summoner = Summoner(**kwargs)

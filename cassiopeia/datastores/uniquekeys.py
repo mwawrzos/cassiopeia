@@ -1777,7 +1777,7 @@ validate_many_league_entries_query = (
 def for_league_summoner_entries(
     entries: LeagueSummonerEntries,
 ) -> List[Tuple[str, str]]:
-    return [(entries.platform.value, entries._LeagueSummonerEntries__summoner.id)]
+    return [(entries.platform.value, entries._LeagueSummonerEntries__summoner.puuid)]
 
 
 def for_league_summoner_entries_query(query: Query) -> List[Tuple[str, str]]:

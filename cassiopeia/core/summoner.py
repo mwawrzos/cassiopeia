@@ -40,19 +40,14 @@ class Summoner(CassiopeiaGhost):
     def __init__(
         self,
         *,
-        id: str = None,
-        account_id: str = None,
-        puuid: str = None,
-        region: Union[Region, str] = None,
+        puuid: str,
+        region: Union[Region, str],
     ):
-        kwargs = {"region": region}
+        kwargs = {
+            "region": region,
+            "puuid" :puuid
+        }
 
-        if id is not None:
-            kwargs["id"] = id
-        if account_id is not None:
-            kwargs["accountId"] = account_id
-        if puuid is not None:
-            kwargs["puuid"] = puuid
         super().__init__(**kwargs)
 
     @classmethod
@@ -139,18 +134,8 @@ class Summoner(CassiopeiaGhost):
 
     @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on
-    def account_id(self) -> str:
-        return self._data[SummonerData].accountId
-
-    @CassiopeiaGhost.property(SummonerData)
-    @ghost_load_on
     def puuid(self) -> str:
         return self._data[SummonerData].puuid
-
-    @CassiopeiaGhost.property(SummonerData)
-    @ghost_load_on
-    def id(self) -> str:
-        return self._data[SummonerData].id
 
     @CassiopeiaGhost.property(SummonerData)
     @ghost_load_on

@@ -64,14 +64,7 @@ class ChampionMasteries(CassiopeiaLazyList):
         if isinstance(summoner, Summoner):
             query["puuid"] = summoner.puuid
         elif isinstance(summoner, str):
-            if len(summoner) < 35:
-                # It's a summoner name
-                summoner = Summoner(name=summoner, region=region)
-                query["puuid"] = summoner.puuid
-            else:
-                # It's probably a summoner id, still need puuid
-                summoner = Summoner(id=summoner, region=region)
-                query["puuid"] = summoner.puuid
+            query["puuid"] = summoner
         return query
 
     @lazy_property
@@ -150,7 +143,6 @@ class ChampionMastery(CassiopeiaGhost):
         if isinstance(summoner, Summoner):
             query["puuid"] = summoner.puuid
         elif isinstance(summoner, str):
-            # It's probably a summoner id
             query["puuid"] = summoner
 
         if isinstance(champion, Champion):
@@ -225,7 +217,7 @@ class ChampionMastery(CassiopeiaGhost):
     def summoner(self) -> Summoner:
         """Summoner for this entry."""
         return Summoner(
-            id=self._data[ChampionMasteryData].summonerId, region=self.region
+            puuid=self._data[ChampionMasteryData].puuid, region=self.region
         )
 
     @CassiopeiaGhost.property(ChampionMasteryData)
