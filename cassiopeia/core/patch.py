@@ -57,7 +57,26 @@ class Patch(object):
             if string in patch.name:
                 return patch
         else:
-            raise ValueError("Unknown patch name {}".format(string))
+            # Fallback: try to parse string into major and minor
+            try:
+                major_minor = string.split(".")
+                major = int(major_minor[0])
+                minor = int(major_minor[1])
+            except (IndexError, ValueError):
+                raise ValueError(f"Unknown patch name {string} and could not parse major.minor")
+
+            base_start = patch.start
+            base_major = int(patch.major)
+            base_minor = int(patch.minor)
+
+            # Calculate the difference
+            major_diff = major - base_major
+            minor_diff = minor - base_minor
+
+            # Calculate the new start date
+            start = base_start.shift(years=major_diff, weeks=minor_diff * 2)
+
+            return Patch(region, string, start, None)
 
     @classmethod
     def from_date(cls, date: arrow.Arrow, region: Union[Region, str]) -> "Patch":
