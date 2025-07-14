@@ -148,10 +148,10 @@ class ChampionMastery(CassiopeiaGhost):
     ) -> dict:
         query = {"region": region}
         if isinstance(summoner, Summoner):
-            query["summoner.id"] = summoner.id
+            query["puuid"] = summoner.puuid
         elif isinstance(summoner, str):
             # It's probably a summoner id
-            query["summoner.id"] = summoner
+            query["puuid"] = summoner
 
         if isinstance(champion, Champion):
             query["champion.id"] = champion.id
@@ -166,7 +166,7 @@ class ChampionMastery(CassiopeiaGhost):
             "region": self.region,
             "platform": self.platform.value,
             "puuid": self.summoner.puuid,
-            "summoner.id": self.summoner.id,
+            "summoner": self.summoner,
             "champion.id": self.champion.id,
         }
 
@@ -227,12 +227,6 @@ class ChampionMastery(CassiopeiaGhost):
         return Summoner(
             id=self._data[ChampionMasteryData].summonerId, region=self.region
         )
-
-    @CassiopeiaGhost.property(ChampionMasteryData)
-    @ghost_load_on
-    def chest_granted(self) -> bool:
-        """Is chest granted for this champion or not in current season?"""
-        return self._data[ChampionMasteryData].chestGranted
 
     @CassiopeiaGhost.property(ChampionMasteryData)
     @ghost_load_on

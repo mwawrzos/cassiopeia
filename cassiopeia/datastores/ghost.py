@@ -244,7 +244,7 @@ class UnloadedGhostStore(DataSource):
     _validate_get_champion_mastery_query = (
         Query.has("platform")
         .as_(Platform)
-        .also.has("summoner.id")
+        .also.has("puuid")
         .as_(str)
         .also.has("champion.id")
         .as_(int)
@@ -466,8 +466,8 @@ class UnloadedGhostStore(DataSource):
         self, query: MutableMapping[str, Any], context: PipelineContext = None
     ) -> ChampionMastery:
         query["region"] = query.pop("platform").region
-        if "summoner.id" in query:
-            query["summoner"] = query.pop("summoner.id")
+        if "puuid" in query:
+            query["summoner"] = query.pop("puuid")
         if "summoner.accountId" in query:
             query["_account_id"] = query.pop("summoner.accountId")
         if "champion.id" in query:

@@ -42,8 +42,6 @@ class ChampionMasteryAPI(RiotAPIService):
     _validate_get_champion_mastery_query = (
         Query.has("platform")
         .as_(Platform)
-        .also.has("summoner.id")
-        .as_(str)
         .also.has("puuid")
         .as_(str)
         .also.has("champion.id")
@@ -74,7 +72,7 @@ class ChampionMasteryAPI(RiotAPIService):
             raise NotFoundError(str(error)) from error
 
         data["region"] = query["platform"].region.value
-        data["summonerId"] = query["summoner.id"]
+        data["puuid"] = query["puuid"]
         return ChampionMasteryDto(data)
 
     _validate_get_many_champion_mastery_query = (

@@ -1564,7 +1564,7 @@ def for_champion_rotation_query(query: Query) -> List[str]:
 validate_champion_mastery_query = (
     Query.has("platform")
     .as_(Platform)
-    .also.has("summoner.id")
+    .also.has("puuid")
     .as_(str)
     .or_("summoner.accountId")
     .as_(str)

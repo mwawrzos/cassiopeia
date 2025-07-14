@@ -11,9 +11,9 @@ from .constants import CHAMP_NAME, SUMMONER_NAME, UNKNOWN_SUMMONER_NAME
 
 
 def test_masteries_correct_type():
-    summoner = cassiopeia.get_summoner(name=SUMMONER_NAME, region="NA")
+    summoner = cassiopeia.get_account(name=SUMMONER_NAME, tagline="NA1", region="NA").summoner
     champ_masteries = cassiopeia.get_champion_masteries(
-        summoner=summoner.id, region="NA"
+        summoner=summoner, region="NA"
     )
 
     assert isinstance(champ_masteries, SearchableList)
@@ -22,9 +22,9 @@ def test_masteries_correct_type():
 
 def test_masteries_contains_all_champions():
     champions = cassiopeia.get_champions(region="NA")
-    summoner = cassiopeia.get_summoner(name=SUMMONER_NAME, region="NA")
+    summoner = cassiopeia.get_account(name=SUMMONER_NAME, tagline="NA1", region="NA").summoner
     champ_masteries = cassiopeia.get_champion_masteries(
-        summoner=summoner.id, region="NA"
+        summoner=summoner, region="NA"
     )
     for cm in champ_masteries:
         assert cm.champion in champions
@@ -33,10 +33,10 @@ def test_masteries_contains_all_champions():
 
 
 def test_mastery_return():
-    summoner = cassiopeia.get_summoner(name=SUMMONER_NAME, region="NA")
+    summoner = cassiopeia.get_account(name=SUMMONER_NAME, tagline="NA1", region="NA").summoner
     champion = cassiopeia.get_champion(CHAMP_NAME, region="NA")
     champion_mastery = cassiopeia.get_champion_mastery(
-        summoner=summoner.id, champion=champion, region="NA"
+        summoner=summoner, champion=champion, region="NA"
     )
 
     assert isinstance(champion_mastery, cassiopeia.ChampionMastery)
@@ -48,7 +48,6 @@ def test_mastery_return():
 
     assert isinstance(champion_mastery.platform, Platform)
     assert isinstance(champion_mastery.region, Region)
-    assert isinstance(champion_mastery.chest_granted, bool)
     assert isinstance(champion_mastery.last_played, arrow.Arrow)
     assert isinstance(champion_mastery.level, int) and champion_mastery.level <= 7
     assert isinstance(champion_mastery.points, int)
