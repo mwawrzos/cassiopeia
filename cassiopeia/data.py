@@ -236,6 +236,12 @@ class GameMode(Enum):
     utlbook = "ULTBOOK"
     cherry = "CHERRY"
     wipmode = "WIPMODEWIP"
+    swiftplay = "SWIFTPLAY"
+    wipmodewip3 = "WIPMODEWIP3"
+    wipmodewip4 = "WIPMODEWIP4"
+    wipmodewip5 = "WIPMODEWIP5"
+    brawl = "BRAWL"
+    cs = "CS"
 
 
 class MasteryTree(Enum):

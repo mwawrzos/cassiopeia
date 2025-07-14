@@ -10,8 +10,7 @@ def print_summoner(name: str, tagline: str, region: str):
     )
     summoner = account.summoner
     print("Name:", account.name_with_tagline)
-    print("ID:", summoner.id)
-    print("Account ID:", summoner.account_id)
+    print("PUUID:", summoner.puuid)
     print("Level:", summoner.level)
     print("Revision date:", summoner.revision_date)
     print("Profile icon ID:", summoner.profile_icon.id)

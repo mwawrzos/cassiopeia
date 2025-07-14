@@ -6,7 +6,7 @@ from cassiopeia.core import Account
 def print_leagues(name: str, tagline: str, region: str):
     account = Account(name=name, tagline=tagline, region=region)
     print("Name:", account.name)
-    print("ID:", account.summoner.id)
+    print("PUUID:", account.summoner.puuid)
 
     # entries = cass.get_league_entries(summoner, region=region)
     entries = account.summoner.league_entries

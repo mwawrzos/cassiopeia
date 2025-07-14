@@ -1,4 +1,5 @@
 from collections import Counter
+import datetime
 import random
 
 import cassiopeia as cass
@@ -44,18 +45,19 @@ def test_match():
     name = "Kalturi"
     region = "NA"
 
-    summoner = Summoner(name=name, region=region)
+    a = cass.Account(name=name, tagline="NA1", region=region)
+    summoner = a.summoner
 
-    match_history = cass.get_match_history(summoner, queues={Queue.ranked_solo_fives})
+    match_history = cass.get_match_history(a.continent, summoner.puuid, queue=Queue.ranked_solo_fives)
     match_history = summoner.match_history
-    match_history(queues={Queue.ranked_solo_fives})
+    match_history(queue=Queue.ranked_solo_fives)
 
     champion_id_to_name_mapping = {
         champion.id: champion.name for champion in cass.get_champions(region=region)
     }
     played_champions = Counter()
-    for match in match_history:
-        champion_id = match.participants[summoner.name].champion.id
+    for match in match_history[:5]:
+        champion_id = match.participants[summoner].champion.id
         champion_name = champion_id_to_name_mapping[champion_id]
         played_champions[champion_name] += 1
 
@@ -66,18 +68,22 @@ def test_match():
     match.id
 
     p = match.participants[summoner]
-    p.id, p.summoner.region, p.summoner.account_id, p.summoner.name, p.summoner.id, p.champion.id
+    p.id, p.summoner.region, p.summoner_name, p.summoner.puuid, p.champion.id, p.champion.name,
 
     for p in match.participants:
-        p.id, p.summoner.region, p.summoner.account_id, p.summoner.name, p.summoner.id, p.champion.id, p.team.first_dragon
+        p.id, p.summoner.region, p.summoner_name, p.summoner.puuid, p.champion.id, p.champion.name, p.team.first_dragon, p.runes.keystone.name
 
     for p in match.participants:
-        p.id, p.summoner.region, p.summoner.account_id, p.summoner.name, p.summoner.id, p.champion.id, p.team.first_dragon
+        p.id, p.summoner.region, p.summoner_name, p.summoner.puuid, p.champion.id, p.champion.name, p.team.first_dragon, p.runes.keystone.name
+
+    for p in match.participants:
+        for r in p.stat_runes:
+            r.name
 
     match.blue_team.win
     match.red_team.win
     for p in match.blue_team.participants:
-        p.summoner.name
+        p.summoner_name
 
 
 def test_champions():
@@ -93,20 +99,12 @@ def test_champions():
 
     annie.info.difficulty
     annie.passive.name
-    {
-        item.name: count
-        for item, count in annie.recommended_itemsets[0].item_sets[0].items.items()
-    }
     annie.free_to_play
     annie._Ghost__all_loaded
 
     ziggs = cass.get_champion("Ziggs", region="NA")
     ziggs.name
     ziggs.region
-    {
-        item.name: count
-        for item, count in ziggs.recommended_itemsets[0].item_sets[0].items.items()
-    }
     ziggs.free_to_play
     for spell in ziggs.spells:
         for var in spell.variables:
@@ -115,21 +113,21 @@ def test_champions():
 
 
 def test_championmastery():
-    me = Summoner(name="Kalturi", region="NA")
+    me = cass.Account(name="Kalturi", tagline="NA1", region="NA")
     karma = Champion(name="Karma", id=43, region="NA")
-    cm = ChampionMastery(champion=karma, summoner=me, region="NA")
-    cm = cass.get_champion_mastery(champion=karma, summoner=me, region="NA")
+    cm = ChampionMastery(champion=karma, summoner=me.summoner, region="NA")
+    cm = cass.get_champion_mastery(champion=karma, summoner=me.summoner, region="NA")
     "Champion ID:", cm.champion.id
     "Mastery points:", cm.points
     "Mastery Level:", cm.level
     "Points until next level:", cm.points_until_next_level
 
-    cms = cass.get_champion_masteries(summoner=me, region="NA")
-    cms = me.champion_masteries
+    cms = cass.get_champion_masteries(summoner=me.summoner, region="NA")
+    cms = me.summoner.champion_masteries
     cms[0].points
     cms["Karma"].points  # Does a ton of calls without a cache
 
-    "{} has mastery level 6 or higher on:".format(me.name)
+    "{} has mastery level 6 or higher on:".format(me.name_with_tagline)
     pro = cms.filter(lambda cm: cm.level >= 6)
     [cm.champion.name for cm in pro]
 
@@ -157,9 +155,10 @@ def test_languagestrings():
 def test_leagues():
     summoner_name = "Kalturi"
     region = "NA"
-    summoner = Summoner(name=summoner_name, region=region)
-    "Name:", summoner.name
-    "ID:", summoner.id
+    a = cass.Account(name=summoner_name, tagline="NA1", region=region)
+    summoner = a.summoner
+    "Name:", summoner.account.name
+    "PUUID:", summoner.puuid
 
     # entries = cass.get_league_entries(summoner, region=region)
     entries = summoner.league_entries
@@ -178,7 +177,8 @@ def test_leagues():
     entries.fives.league.id
     f"Listing all summoners in {entries.fives.league.id}"
     for entry in entries.fives.league.entries:
-        entry.summoner.name, entry.league_points, entries.fives.league.tier, entry.division
+        entry.summoner.account.name, entry.league_points, entries.fives.league.tier, entry.division
+        entry.league.name, entry.tier
 
     "Challenger League name and id:"
     challenger = cass.get_challenger_league(
@@ -197,7 +197,7 @@ def test_leagues():
     "Master League name and id:"
     master = cass.get_master_league(queue=Queue.ranked_solo_fives, region=region)
     # master.name
-    master.id
+    master.id, master.name
 
 
 def test_locales():
@@ -224,9 +224,9 @@ def test_profileicons():
 
 
 def test_readme():
-    summoner = cass.get_summoner(name="Kalturi", region="NA")
+    summoner = cass.get_account(name="Kalturi", tagline="NA1", region="NA").summoner
     "{name} is a level {level} summoner on the {region} server.".format(
-        name=summoner.name, level=summoner.level, region=summoner.region
+        name=summoner.account.name, level=summoner.level, region=summoner.region
     )
     champions = cass.get_champions(region="NA")
     random_champion = random.choice(champions)
@@ -237,7 +237,7 @@ def test_readme():
     )
     best_na = challenger_league[0].summoner
     "He's not as good as {name} at League, but probably a better python programmer!".format(
-        name=best_na.name
+        name=best_na.account.name
     )
 
 
@@ -259,23 +259,25 @@ def test_spectator():
         match.region, match.id
 
     match = featured_matches[0]
-    a_summoner_name = match.blue_team.participants[0].summoner.name
+    a_summoner = match.blue_team.participants[0].summoner
+    a_summoner.account.name
+    a_tagline = match.blue_team.participants[0].summoner.account.tagline
     match.queue
-    summoner = Summoner(name=a_summoner_name, region=match.region)
+    summoner = cass.Summoner(puuid=a_summoner.puuid, region=match.region)
     current_match = summoner.current_match
     current_match.map.name
 
     for participant in current_match.blue_team.participants:
-        participant.summoner.name
+        participant.summoner.account.name
 
 
 def test_summoner():
     name = "Kalturi"
     region = "NA"
-    summoner = Summoner(name=name, region=region)
-    "Name:", summoner.name
-    "ID:", summoner.id
-    "Account ID:", summoner.account_id
+    a = cass.Account(name=name, tagline="NA1", region=region)
+    summoner = a.summoner
+    "Name:", summoner.account.name
+    "PUUID:", summoner.puuid
     "Level:", summoner.level
     "Revision date:", summoner.revision_date
     "Profile icon ID:", summoner.profile_icon.id
@@ -303,7 +305,8 @@ def test_summonerspells():
 def test_timeline():
     name = "Kalturi"
     region = "NA"
-    summoner = Summoner(name=name, region=region)
+    a = cass.Account(name=name, tagline="NA1", region=region)
+    summoner = a.summoner
     match_history = summoner.match_history
     match = match_history[0]
     "Match ID:", match.id
@@ -316,3 +319,25 @@ def test_timeline():
     for p in match.participants:
         for event in p.timeline.events:
             event.type
+    
+    match = next(m for m in match_history if m.duration > datetime.timedelta(minutes=16))
+    p = match.participants[summoner]
+    p_state = p.cumulative_timeline[datetime.timedelta(minutes=15, seconds=30)]
+    p_state = p.cumulative_timeline["15:30"]
+
+    items = [item.name for item in p_state.items]
+    print("Champion:", p.champion.name)
+    print("Items:", items)
+    print("Skills:", p_state.skills)
+    print("Kills:", p_state.kills)
+    print("Deaths:", p_state.deaths)
+    print("Assists:", p_state.assists)
+    print("KDA:", p_state.kda)
+    print("Level:", p_state.level)
+    print("Position:", p_state.position)
+    print("Exp:", p_state.experience)
+    print("Number of objectives assisted in:", p_state.objectives)
+    print("Gold earned:", p_state.gold_earned)
+    print("Current gold:", p_state.current_gold)
+    print("CS:", p_state.creep_score)
+    print("CS in jungle:", p_state.neutral_minions_killed)

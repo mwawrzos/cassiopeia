@@ -3095,7 +3095,7 @@ def for_current_match(current_match_info: CurrentMatch) -> List[Tuple[str, str]]
     return [
         (
             current_match_info.platform.value,
-            participant._data[CurrentGameParticipantData].summonerId,
+            participant._data[CurrentGameParticipantData].puuid,
         )
         for participant in current_match_info.participants
     ] + [(current_match_info.platform.value, current_match_info.id)]
