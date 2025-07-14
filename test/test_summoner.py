@@ -40,6 +40,15 @@ class TestSummoner(unittest.TestCase):
         self.assertIsNotNone(s.match_history)
         self.assertIsNotNone(s.league_entries)
 
+    def test_get_summoner(self):
+        # Get a known summoner via account
+        a = cassiopeia.get_account(name=SUMMONER_NAME, tagline="NA1", region="NA")
+        s = a.summoner
+        # Test get_summoner by puuid
+        s_by_puuid = cassiopeia.get_summoner(puuid=s.puuid, region="NA")
+        self.assertTrue(s_by_puuid.exists)
+        self.assertEqual(s_by_puuid.puuid, s.puuid)
+
 
 if __name__ == "__main__":
     unittest.main()

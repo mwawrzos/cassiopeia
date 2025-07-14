@@ -166,12 +166,10 @@ def get_champion_mastery(
 
 def get_summoner(
     *,
-    id: str = None,
-    account_id: str = None,
     puuid: str = None,
     region: Union[Region, str] = None,
 ) -> Summoner:
-    return Summoner(id=id, account_id=account_id, puuid=puuid, region=region)
+    return Summoner(puuid=puuid, region=region)
 
 
 def get_account(

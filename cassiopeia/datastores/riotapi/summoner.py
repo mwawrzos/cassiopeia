@@ -36,11 +36,7 @@ class SummonerAPI(RiotAPIService):
         pass
 
     _validate_get_summoner_query = (
-        Query.has("id")
-        .as_(str)
-        .or_("accountId")
-        .as_(str)
-        .or_("puuid")
+        Query.has("puuid")
         .as_(str)
         .also.has("platform")
         .as_(Platform)
@@ -51,17 +47,7 @@ class SummonerAPI(RiotAPIService):
     def get_summoner(
         self, query: MutableMapping[str, Any], context: PipelineContext = None
     ) -> SummonerDto:
-        if "id" in query:
-            url = "https://{platform}.api.riotgames.com/lol/summoner/v4/summoners/{summonerId}".format(
-                platform=query["platform"].value.lower(), summonerId=query["id"]
-            )
-            endpoint = "summoners/summonerId"
-        elif "accountId" in query:
-            url = "https://{platform}.api.riotgames.com/lol/summoner/v4/summoners/by-account/{accountId}".format(
-                platform=query["platform"].value.lower(), accountId=query["accountId"]
-            )
-            endpoint = "summoners/by-account/accountId"
-        elif "puuid" in query:
+        if "puuid" in query:
             url = "https://{platform}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/{puuid}".format(
                 platform=query["platform"].value.lower(), puuid=query["puuid"]
             )
