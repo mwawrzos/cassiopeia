@@ -107,7 +107,7 @@ if USE_PYCURL:
                         for rate_limiter in rate_limiters
                     ]
                     exit_limiters = stack.pop_all().__exit__
-                    status_code = HTTPClient._execute(curl, connection is None)
+                status_code = HTTPClient._execute(curl, connection is None)
                 exit_limiters(None, None, None)
             else:
                 status_code = HTTPClient._execute(curl, connection is None)
@@ -214,7 +214,7 @@ else:  # Use requests
                         for rate_limiter in rate_limiters
                     ]
                     exit_limiters = stack.pop_all().__exit__
-                    r = requests.get(url, headers=request_headers)
+                r = requests.get(url, headers=request_headers)
                 exit_limiters(None, None, None)
             else:
                 r = requests.get(url, headers=request_headers)
